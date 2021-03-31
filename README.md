@@ -41,6 +41,10 @@ The ratings describe that in recent gameweeks and heading into GW30, Manchester 
 
 Defensively, Brighton Hove Albion and Chelsea are in the strongest form, by a considerable margin. Manchester City have slipped in recent weeks to place them in 7th best defensive form. Sheffield United and Aston Villa are the teams with the current worst defensive form.
 
+Below are simple seaborn generated lineplots of the ratings data. New dynamic and clean visualizations are discussed in the next section.
+![Offensive Ratings](offensive_ratings.png)
+![Defensive Ratings](defensive_ratings.png)
+
 ## Further Development
 * In a few weeks time I will be learning Tableau and using it in a project for my Cloud Computing Applications course. With this experience I intend to create a dynamic and cleaner visualization of the ratings tables and plots. This will replace the visually noisy and static seaborn plots.
 * Due to the format of data on FFS, some manual editing is required for 'Double Gameweeks' (where some teams play twice within one gameweek). The scraping script could be adjusted to be more robust to these events, however it would likely be complicated and not necessary as large double gameweeks are rare in non-covid affected seasons.
