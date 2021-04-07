@@ -52,7 +52,7 @@ Below are simple seaborn generated lineplots of the ratings data. New dynamic an
 
 ## Run Instructions
 Dependent on python 3.8, selenium, Beautiful Soup 4, Pandas and NumPy
-1. Pull data from FFS
+1. Pull and clean data from FFS
     1. Input login details to *login.txt*
     2. Run scrape_fixtures.py with following CLA:
     ```
@@ -63,7 +63,7 @@ Dependent on python 3.8, selenium, Beautiful Soup 4, Pandas and NumPy
     ```
     python scrape.py <gw_number>
     ```
- 2. Clean data, perform odm model, generate weekly ratings tables (offense_scores.csv and defense_scores.csv)
+ 2. Perform odm model, generate weekly ratings tables (offense_scores.csv and defense_scores.csv)
     1. Run odm.py with following CLA (may take few minutes):
     ```
     python odm.py <last_completed_gw_number>
