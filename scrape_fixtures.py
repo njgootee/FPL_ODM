@@ -2,6 +2,7 @@ from selenium import webdriver
 from seleniumrequests import Chrome
 from bs4 import BeautifulSoup
 import sys
+import pandas as pd
 
 #LOGIN
 #Uses login.txt file to enter FFS members area
@@ -53,3 +54,35 @@ for table in tables:
 #Close file and driver
 file_name.close()
 driver.quit()
+
+# FUNCTION TO CLEAN FIXTURES DATA
+#read file as pandas dataframe
+fixtures = pd.read_csv('fixtures/2021.csv')
+team_dict = {
+    "Leeds United": "LEE",
+    "Southampton" : "SOU",
+    "Brighton and Hove Albion" : "BHA",
+    "Crystal Palace" : "CRY",
+    "Manchester United" : "MUN",
+    "Arsenal" : "ARS",
+    "Newcastle United" : "NEW",
+    "Manchester City" : "MCI",
+    "Aston Villa" : "AVL",
+    "Leicester City" : "LEI",
+    "West Ham United" : "WHU",
+    "Tottenham Hotspur" : "TOT",
+    "Fulham" : "FUL",
+    "Sheffield United" : "SHU",
+    "Liverpool" : "LIV",
+    "Everton" : "EVE",
+    "Burnley" : "BUR",
+    "West Bromwich Albion" : "WBA",
+    "Chelsea" : "CHE",
+    "Wolverhampton Wanderers" : "WOL"
+}
+#Replace home, away team names with 3 char truncated names, strip score column to x-y format 
+fixtures["Home"].replace(team_dict, inplace=True)
+fixtures["Away"].replace(team_dict, inplace=True)
+fixtures["Score"]=fixtures["Score"].str[:3]
+#Save/replace file
+fixtures.to_csv('fixtures/2021.csv', index = False)

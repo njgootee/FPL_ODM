@@ -2,85 +2,6 @@ import pandas as pd
 import numpy as np
 import sys
 
-# FUNCTION TO CLEAN FIXTURES DATA
-def clean_fixtures(fixtures):
-    team_dict = {
-        "Leeds United": "LEE",
-        "Southampton" : "SOU",
-        "Brighton and Hove Albion" : "BHA",
-        "Crystal Palace" : "CRY",
-        "Manchester United" : "MUN",
-        "Arsenal" : "ARS",
-        "Newcastle United" : "NEW",
-        "Manchester City" : "MCI",
-        "Aston Villa" : "AVL",
-        "Leicester City" : "LEI",
-        "West Ham United" : "WHU",
-        "Tottenham Hotspur" : "TOT",
-        "Fulham" : "FUL",
-        "Sheffield United" : "SHU",
-        "Liverpool" : "LIV",
-        "Everton" : "EVE",
-        "Burnley" : "BUR",
-        "West Bromwich Albion" : "WBA",
-        "Chelsea" : "CHE",
-        "Wolverhampton Wanderers" : "WOL"
-    }
-    #Replace home, away team names with 3 truncated names, strip score column to x-y format 
-    fixtures["Home"].replace(team_dict, inplace=True)
-    fixtures["Away"].replace(team_dict, inplace=True)
-    fixtures["Score"]=fixtures["Score"].str[:3]
-    #Save/replace
-    fixtures.to_csv('fixtures/2021.csv', index = False)
-
-#FUNCTION TO CLEAN GW DATA
-def clean_gw(fixtures):
-    id_dict = {
-        "ARS" : 0,
-        "AVL" : 1,
-        "BHA" : 2,
-        "BUR" : 3,
-        "CHE" : 4,
-        "CRY" : 5,
-        "EVE" : 6,
-        "FUL" : 7,
-        "LEE" : 8,
-        "LEI" : 9,
-        "LIV" : 10,
-        "MCI" : 11,
-        "MUN" : 12,
-        "NEW" : 13,
-        "SHU" : 14,
-        "SOU" : 15,
-        "TOT" : 16,
-        "WBA" : 17,
-        "WHU" : 18,
-        "WOL" : 19
-    }
-
-    dgw = []
-    #iterate through gameweeks
-    for i in range(1,26):
-        gw=pd.read_csv("gw_data/gw_"+str(i))
-        gw_fixtures = fixtures.loc[fixtures["GW"]==i]
-
-        #Check for presence of DGW, add DGW teams + week to print array. Drop dgw teams from fixtures, ammend data manually.
-        if(len(gw_fixtures)>10):
-            team_list = pd.DataFrame(np.concatenate([gw_fixtures["Home"].values,gw_fixtures["Away"].values]))
-            dgw.append((team_list[team_list.duplicated()].values+str(i)).tolist())
-            gw_fixtures = gw_fixtures.drop_duplicates("Home")
-            gw_fixtures = gw_fixtures.drop_duplicates("Away")
-
-        #Map opposition team name, opposition team id, home team id to gw
-        gw["Opp"]= (gw["Team"].map(gw_fixtures.set_index("Home")["Away"]).fillna("")+gw["Team"].map(gw_fixtures.set_index("Away")["Home"]).fillna(""))
-        gw["Team_id"]=gw["Team"].map(id_dict)
-        gw["Opp_id"]=gw["Opp"].map(id_dict)
-
-        #Save gw
-        gw.to_csv("gw_clean/gw_clean_"+str(i)+".csv", index=False)
-    #Print dgw items to notify team+week that require manual editing
-    print("Double gameweeks:", dgw)
-
 #FUNCTION TO GENERATE RANKINGS
 def odm_model(COMPL_GW, GW_RANGE = 6):
     team_list=["ARS","AVL","BHA","BUR","CHE","CRY","EVE","FUL","LEE","LEI","LIV","MCI","MUN","NEW","SHU","SOU","TOT","WBA","WHU","WOL"]
@@ -124,7 +45,4 @@ def odm_model(COMPL_GW, GW_RANGE = 6):
 
 # Run
 CURR_COMPL_GW = int(sys.argv[1])
-fixtures = pd.read_csv('fixtures/2021.csv')
-clean_fixtures(fixtures)
-clean_gw(fixtures)
 odm_model(CURR_COMPL_GW)

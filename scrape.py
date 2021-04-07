@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 import sys
 from bs4 import BeautifulSoup
+import pandas as pd
 
 #LOGIN
 #Uses login.txt file to enter FFS members area
@@ -58,3 +59,52 @@ for row in table.find_all('tr'):
 #Close file and driver
 file_name.close()
 driver.quit()
+
+#CLEAN GW DATA
+fixtures = pd.read_csv('fixtures/2021.csv')
+id_dict = {
+    "ARS" : 0,
+    "AVL" : 1,
+    "BHA" : 2,
+    "BUR" : 3,
+    "CHE" : 4,
+    "CRY" : 5,
+    "EVE" : 6,
+    "FUL" : 7,
+    "LEE" : 8,
+    "LEI" : 9,
+    "LIV" : 10,
+    "MCI" : 11,
+    "MUN" : 12,
+    "NEW" : 13,
+    "SHU" : 14,
+    "SOU" : 15,
+    "TOT" : 16,
+    "WBA" : 17,
+    "WHU" : 18,
+    "WOL" : 19
+}
+
+#Read in uncleaned data as pandas dataframe
+dgw = []
+CURR_GW = sys.argv[1]
+gw=pd.read_csv("gw_data/gw_"+str(CURR_GW))
+gw_fixtures = fixtures.loc[fixtures["GW"]==int(CURR_GW)]
+
+#Check for presence of DGW, add DGW teams + week to print array. Drop dgw teams from fixtures, ammend data manually.
+if(len(gw_fixtures)>10):
+    team_list = pd.DataFrame(np.concatenate([gw_fixtures["Home"].values,gw_fixtures["Away"].values]))
+    dgw.append((team_list[team_list.duplicated()].values+str(CURR_GW)).tolist())
+    gw_fixtures = gw_fixtures.drop_duplicates("Home")
+    gw_fixtures = gw_fixtures.drop_duplicates("Away")
+
+#Map opposition team name, opposition team id, home team id to gw
+gw["Opp"]= (gw["Team"].map(gw_fixtures.set_index("Home")["Away"]).fillna("")+gw["Team"].map(gw_fixtures.set_index("Away")["Home"]).fillna(""))
+gw["Team_id"]=gw["Team"].map(id_dict)
+gw["Opp_id"]=gw["Opp"].map(id_dict)
+
+#Save gw
+gw.to_csv("gw_clean/gw_clean_"+str(CURR_GW)+".csv", index=False)
+#Print dgw items to notify team+week that require manual editing
+if len(dgw)>0:
+    print("Double gameweeks:", dgw)
