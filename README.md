@@ -34,21 +34,12 @@ This 'look-back range' can be altered in *odm.py* with the variable *GW_RANGE*.
 For offensive ratings, a larger rating score is stronger. For defensive ratings, a lower defense score is stronger. Each rating is prior to the start of the given gameweek, i.e. a teams form heading into that gameweek.
 For example, ratings for gameweek 7 are based on xG data from gameweek 1 through 6, and do not include gameweek 7 xG results.
 
-In addition to the generated csv tables of the ratings, images of Seaborn generated plots are provided in the repository as *offensive_ratings.png* and *defesnive_ratings.png*.
-
-### Looking Ahead
-The ratings describe that in recent gameweeks and heading into GW30, Manchester City's offensive form is significantly greater than other teams in the league. Arsenal and West Ham are also in relatively good offensive form. Sheffield United, Wolves and Crystal Palace are the teams with the worst offensive form heading into GW 30.
-
-Defensively, Brighton Hove Albion and Chelsea are in the strongest form, by a considerable margin. Manchester City have slipped in recent weeks to place them in 7th best defensive form. Sheffield United and Aston Villa are the teams with the current worst defensive form.
-
-Below are simple seaborn generated lineplots of the ratings data. New dynamic and clean visualizations are discussed in the next section.
-![Offensive Ratings](offensive_ratings.png)
-![Defensive Ratings](defensive_ratings.png)
+### Visualizing Results
+The generated csv tables of offensive and defensive ratings are provided in this repository. For an interactive visualization of ratings, check out my [Tableau Dashboard](https://public.tableau.com/app/profile/nathan.gootee/viz/fpl_16233837575730/Dashboard1) for this project.
 
 ## Further Development
-* In a few weeks time I will be learning Tableau and using it in a project for my Cloud Computing Applications course. With this experience I intend to create a dynamic and cleaner visualization of the ratings tables and plots. This will replace the visually noisy and static seaborn plots.
-* Due to the format of data on FFS, some manual editing is required for 'Double Gameweeks' (where some teams play twice within one gameweek). The scraping script could be adjusted to be more robust to these events, however it would likely be complicated and not necessary as large double gameweeks are rare in non-covid affected seasons.
-* The application could feature automatic updates and require less user input by using cloud based services for storage and compute. However, as the application is in early development phase it is not worth the cost.
+* Due to the format of data on FFS, some manual editing is required for 'Double Gameweeks' (where some teams play twice within one gameweek). The scraping script could be adjusted to be more robust to these events, however it would likely be complicated and not necessary as large double gameweeks are rare in (future) non-covid affected seasons.
+* The application could feature automatic updates and require less user input by using cloud based services for storage and compute (such as AWS). However, as the application audience is small, it is not worth the cost.
 
 ## Run Instructions
 Dependent on python 3.8, selenium, Beautiful Soup 4, Pandas and NumPy
@@ -58,13 +49,13 @@ Dependent on python 3.8, selenium, Beautiful Soup 4, Pandas and NumPy
     ```
     python scrape_fixtures.py <last_completed_gw_number>
     ```
-    3. In scrape.py edit private stats table link to personal stats table with columns: Team, G, GC, xGC, xG and filtered by arbitrary gameweek.
-    4. Run scrape.py for each completed gameweek with following CLA:
+    3. In scrape_xg.py edit private stats table link to personal stats table with columns: Team, G, GC, xGC, xG and filtered by arbitrary gameweek.
+    4. Run scrape_xg.py for each completed gameweek with following CLA:
     ```
     python scrape.py <gw_number>
     ```
  2. Perform odm model, generate weekly ratings tables (offense_scores.csv and defense_scores.csv)
-    1. Run odm.py with following CLA (may take few minutes):
+    1. Run odm.py with following CLA:
     ```
     python odm.py <last_completed_gw_number>
     ```
